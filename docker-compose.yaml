@@ -1,0 +1,47 @@
+version: '3'
+services: 
+  nodejs-app:
+    build:
+      context: node
+      dockerfile: Dockerfile.prod
+    container_name: nodejs
+    hostname: nodejs
+    ports:
+      - "3000:3000" 
+    depends_on: 
+      - db
+    networks:
+      - nodinxsql
+
+
+  db:
+    image: mysql:5.7
+    command: --innodb-use-native-aio=0
+    container_name: db
+    restart: always
+    tty: true
+    volumes: 
+      - ./mysql:/var/lib/mysql
+    environment: 
+      - MYSQL_DATABASE=nodedb
+      - MYSQL_ROOT_PASSWORD=root
+    networks: 
+      - nodinxsql
+    
+  nginx:
+    build:
+      context: nginx
+      dockerfile: Dockerfile.prod
+    container_name: nginx
+    hostname: nginx
+    ports:
+      - "8080:8080" 
+    depends_on:
+      - nodejs-app            
+    networks:
+      - nodinxsql
+
+networks:
+  nodinxsql:
+    external: true      
+  
