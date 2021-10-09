@@ -16,8 +16,16 @@ const config = {
 };
 
 const connection = mysql.createConnection(config)
-const sql = `INSERT INTO people(name) values('Jeferson Rocha')`
+
+const create_table = 'CREATE TABLE IF NOT EXISTS people(id int not null auto_increment, name varchar(255), primary key(id))'
+connection.query(create_table)
+
+const sql = `INSERT INTO people(name) values('Jeferson Rocha');`
+const sql2 = `INSERT INTO people(name) values('Wesley');`
+const sql3 = `INSERT INTO people(name) values('Adriano');`
 connection.query(sql)
+connection.query(sql2)
+connection.query(sql3)
 
 app.set('view engine', 'ejs');
 app.set('views', './views');
